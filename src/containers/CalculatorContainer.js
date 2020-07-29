@@ -2,33 +2,62 @@
 //以下のコードがindex.jsにgo！！
 
 import React, { Component } from "react";
-// Containerの中身をComponentに分解します。
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+
+import * as actions from "../actions";
 import NumBtn from "../components/NumBtn";
 import PlusBtn from "../components/PlusBtn";
 import Result from "../components/Result";
 
 class CalculatorContainer extends Component {
   render() {
+    const { calculator, actions } = this.props;
     return (
       <div>
         <div>
-          <NumBtn n={1} />
-          <NumBtn n={2} />
-          <NumBtn n={3} />
+          <NumBtn n={1} onClick={() => actions.onNumClick(1)} />
+          <NumBtn n={2} onClick={() => actions.onNumClick(2)} />
+          <NumBtn n={3} onClick={() => actions.onNumClick(3)} />
         </div>
         <div>
-          <NumBtn n={4} />
-          <NumBtn n={5} />
-          <NumBtn n={6} />
+          <NumBtn n={4} onClick={() => actions.onNumClick(4)} />
+          <NumBtn n={5} onClick={() => actions.onNumClick(5)} />
+          <NumBtn n={6} onClick={() => actions.onNumClick(6)} />
         </div>
         <div>
-          <NumBtn n={7} />
-          <NumBtn n={8} />
-          <NumBtn n={9} />
+          <NumBtn n={7} onClick={() => actions.onNumClick(7)} />
+          <NumBtn n={8} onClick={() => actions.onNumClick(8)} />
+          <NumBtn n={9} onClick={() => actions.onNumClick(9)} />
         </div>
         <div>
-         <NumBtn n={0} />
-         <PlusBtn />
+          <NumBtn n={0} onClick={() => actions.onNumClick(0)} />
+          <PlusBtn onClick={actions.onPlusClick} />
         </div>
-        <div>
-           <Result />
+        <Result
+          result={
+            calculator.showingResult
+              ? calculator.resultValue
+              : calculator.inputValue
+          }
+        />
+      </div>
+    );
+  }
+}
+
+// ComponentがonClick()されたときのActionを定義
+// これにより、React.jsのComponentと、Reduxで管理しているデータの状態が結合できるようになるわけです。
+const mapState = (state, ownProps) => ({
+  //mapStateはComponentのプロパティとデータの状態をバインドするものです。
+  calculator: state.calculator,
+});
+
+function mapDispatch(dispatch) {
+  // mapDispatchはbindActionCreatorsというActionを登録するたびに動的に追加してくれるメソッドを呼び出すものです。
+  return {
+    actions: bindActionCreators(actions, dispatch),
+  };
+}
+
+export default connect(mapState, mapDispatch)(CalculatorContainer);

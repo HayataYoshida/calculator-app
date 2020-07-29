@@ -1,13 +1,17 @@
+// ここではReducerによって変更された状態(Store)をContainerに渡すという動作が行われています。
+// これにより、Reduxで作成されたデータの状態がReact.jsに渡るようになります。
 import React from "react";
-import ReactDOM from "react-dom";
-//index.jsからContainerを呼ぶ
+import { render } from "react-dom";
+import { createStore } from "redux";
+import { Provider } from "react-redux";
 import CalculatorContainer from "./containers/CalculatorContainer";
-import "./index.css";
-import * as serviceWorker from "./serviceWorker";
+import reducer from "./reducers";
 
-ReactDOM.render(<CalculatorContainer />, document.getElementById("root"));
+const store = createStore(reducer);
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+render(
+  <Provider store={store}>
+    <CalculatorContainer />
+  </Provider>,
+  document.getElementById("root")
+);
